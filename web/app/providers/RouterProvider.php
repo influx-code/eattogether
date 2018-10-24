@@ -90,6 +90,9 @@ class RouterProvider implements ServiceProviderInterface
         return array(
             array(ApiController::class,  '/api/gateway',  'post', '', 'gatewayAction'),
             array(TestController::class, '/test/test1',  'get', '', 'test1Action'),
+
+            array(UserController::class, '/user/login',  'get', '/{mobile}', 'login'),
+            array(UserController::class, '/user/geteatstatus',  'get', '/{mobile}', 'getEatStatus'),
         );
     }
 }
