@@ -8,6 +8,7 @@
 namespace Providers;
 
 use Controller\ApiController;
+use Controller\TestController;
 use Phalcon\Di\ServiceProviderInterface;
 use Phalcon\DiInterface;
 use Phalcon\Events\Manager;

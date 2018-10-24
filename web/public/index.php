@@ -5,8 +5,8 @@ error_reporting(E_ALL & ~E_NOTICE);
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
 define('CACHE_PATH', BASE_PATH . '/cache');
-define('CORE_PATH', dirname(BASE_PATH) . '/core');
-define('LIBRARY_PATH', dirname(BASE_PATH) . '/libraries');
+define('CORE_PATH', BASE_PATH . '/core');
+define('LIBRARY_PATH', BASE_PATH . '/libraries');
 
 /** require core */
 require_once CORE_PATH . "/Bootstrap.php";
