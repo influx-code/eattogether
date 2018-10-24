@@ -13,15 +13,8 @@
                 是否接受约饭
             </div>
             <div class="right list-item__right">
-                <ons-switch class="switch"
-                            style="touch-action: pan-y; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
-                    <input type="checkbox" class="switch__input">
-                    <div class="switch__toggle">
-                        <div class="switch__handle">
-                            <div class="switch__touch"></div>
-                        </div>
-                    </div>
-                </ons-switch>
+                <v-ons-button modifier="cta" style="margin: 3px 0" @click="receiver()">接受</v-ons-button>&nbsp;&nbsp;&nbsp;
+                <v-ons-button modifier="cta" style="margin: 3px 0" @click="confuse()">拒绝</v-ons-button>
             </div>
         </ons-list-item>
         <ons-list-item>
@@ -46,5 +39,19 @@
     </v-ons-page>
 </template>
 <script>
-    export default {}
+    export default {
+        name: 'signin',
+            data:{
+                items:[]
+            },
+            methods: {
+                receiver: function () {
+                   alert(1)
+                },
+                confuse: function () {
+                    alert(2)
+                }
+            }
+
+    }
 </script>
