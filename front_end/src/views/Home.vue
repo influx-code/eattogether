@@ -40,8 +40,11 @@ export default {
       this.$router.push({name: routerName})
     },
     getData() {
-      axios.get('user/getfriendslist/1').then(res => {
-        console.log(res)
+      const uid = window.localStorage.getItem('uid')
+      axios.get(`user/geteatstatus/${uid}`).then(res => {
+        if (res.data) {
+          console.log(res.data)
+        }
       }).catch(error => {
         console.log(error)
       })

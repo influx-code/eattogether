@@ -14,3 +14,15 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    const uid = window.localStorage.getItem('uid')
+    if (!uid) {
+      next({name: 'signin'})
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})

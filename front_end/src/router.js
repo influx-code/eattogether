@@ -10,8 +10,14 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'index',
+      redirect: '/home'
+    },
+    {
+      path: '/home',
       name: 'home',
-      component: Home
+      component: Home,
+      meta: { requiresAuth: true }
     },
     {
       path: '/about',
@@ -19,7 +25,8 @@ export default new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+      component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/signin',
@@ -35,7 +42,8 @@ export default new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/Dutch.vue')
+      component: () => import(/* webpackChunkName: "about" */ './views/Dutch.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/treat',
@@ -43,7 +51,8 @@ export default new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/Treat.vue')
+      component: () => import(/* webpackChunkName: "about" */ './views/Treat.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/schedule',
@@ -51,7 +60,8 @@ export default new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/Schedule.vue')
+      component: () => import(/* webpackChunkName: "about" */ './views/Schedule.vue'),
+      meta: { requiresAuth: true }
     }
   ]
 })
