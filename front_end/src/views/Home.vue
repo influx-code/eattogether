@@ -20,6 +20,14 @@
         </v-ons-button>
       </p>
     </v-ons-card>
+    <v-ons-card v-if="parking">
+      <h1 style="text-align:center">Ing</h1>
+      <p style="text-align:center">
+        <v-ons-button style="width: 80%" @click="go('dutch')">
+          约饭中
+        </v-ons-button>
+      </p>
+    </v-ons-card>
   </v-ons-content>
 </v-ons-page>
 </template>
@@ -32,6 +40,9 @@
 import axios from 'axios'
 export default {
   name: 'home',
+  data: {
+    parking: false
+  },
   mounted() {
     this.getData()
   },
@@ -41,7 +52,7 @@ export default {
     },
     getData() {
       const uid = window.localStorage.getItem('uid')
-      axios.get(`user/geteatstatus/${uid}`).then(res => {
+      axios.get(`/dining/info/${uid}`).then(res => {
         if (res.data) {
           console.log(res.data)
         }

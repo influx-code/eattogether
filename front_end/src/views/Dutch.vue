@@ -115,8 +115,8 @@ export default {
       }
       const postData = {pay_mode: 1, uid:uid,targets: uids } 
       alert(JSON.stringify(postData))
-      axios.post('', postData).then(res => {
-        
+      axios.post('dining/apply', postData).then(res => {
+
       }).catch(error => {
 
       })
