@@ -68,6 +68,7 @@
 
 <script>
 import axios from 'axios'
+import qs from 'qs'
 export default {
   name: "dutch",
   data() {
@@ -115,8 +116,8 @@ export default {
       }
       const postData = {pay_mode: 1, uid:uid,targets: uids } 
       alert(JSON.stringify(postData))
-      axios.post('dining/apply', postData).then(res => {
-
+      axios.post('dining/apply', qs.stringify(postData)).then(res => {
+       
       }).catch(error => {
 
       })
