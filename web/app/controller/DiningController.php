@@ -61,7 +61,7 @@ class DiningController extends BaseController
 		$newInvite = new Invites();
 
 		$diningData = [
-			'uid' => $data['uid'],
+			'user_id' => $data['uid'],
 			'pay_mode' => $data['pay_mode'],
 			'number_limit' => count($data['targets']),
 			'number_ready' => 0,
@@ -86,14 +86,14 @@ class DiningController extends BaseController
 			])->toArray();
 			$uids = array_column($userList, 'id');
 			$randomList = Invites::findFirst([
-				'conditions' => 'uid IN ({uids:array}) AND status IN ({status:array})',
+				'conditions' => 'user_id IN ({uids:array}) AND status IN ({status:array})',
 				'bind' => ['uids' => $uids,'status' => self::$statusList],
 				'limit' => count($needRandom),
 			]);
 			$randomUids = [];
 			if ($randomList->count()) {
 				$randomList = $randomList->toArray();
-				$randomUids = array_column($randomList, 'uid');
+				$randomUids = array_column($randomList, 'user_id');
 			}
 
 			// 合并需要邀请的uid
@@ -112,7 +112,7 @@ class DiningController extends BaseController
 		foreach ($inviteUids as $item) {
 			if (!$item) {
 				$newInvite->id = NULL;
-				$newInvite->uid = $item;
+				$newInvite->user_id = $item;
 				$newInvite->save();
 
 				// 推送队列
@@ -146,7 +146,7 @@ class DiningController extends BaseController
 		$fail = ['result' => -1, 'msg' => '未知错误'];
 		$success = ['result' => 0, 'msg' => 'ok', 'dining_table' => [], 'dining_table_id' => 0];
 		$result = Invites::findFirst([
-			'conditions' => 'uid = :uid: AND status IN ({status:array})',
+			'conditions' => 'user_id = :uid: AND status IN ({status:array})',
 			'bind' => ['uid' => $uid, 'status' => self::$statusList]
 		]);
 
@@ -162,8 +162,8 @@ class DiningController extends BaseController
 			if ($tableInfo->count()) {
 				foreach ($tableInfo as $item) {
 					$diningTableInfo[] = [
-						'uid' => $item->uid,
-						'name' => Users::findFirst($item->uid)->username,
+						'uid' => $item->user_id,
+						'name' => Users::findFirst($item->user_id)->username,
 						'status' => $item->status,
 						'status_invite' => Constants::$statusMap[$item->status]
 					];
