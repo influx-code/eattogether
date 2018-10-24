@@ -10,6 +10,7 @@ namespace Providers;
 use Controller\ApiController;
 use Controller\ExecuteController;
 use Controller\TestController;
+use Controller\DiningController;
 use Controller\UserController;
 use Phalcon\Di\ServiceProviderInterface;
 use Phalcon\DiInterface;
