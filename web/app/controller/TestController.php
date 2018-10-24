@@ -8,7 +8,7 @@ class TestController extends BaseController
 {
     public function test1Action()
     {
-        $data = array('name'=>'stave');
-        $this->output($data);
+		$cacheKey = 'LINSIST_DEBUG';
+		$this->redis->set($cacheKey, 'debug');
     }
 }
