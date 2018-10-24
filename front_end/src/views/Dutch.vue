@@ -1,10 +1,14 @@
 <template>
 <v-ons-page>
   <v-ons-toolbar>
+    <div class="left">
+      <v-ons-toolbar-button @click="goback()">back</v-ons-toolbar-button>
+    </div>
     <div class="center">eattogether</div>
+    
   </v-ons-toolbar>
   <v-ons-content>
-    <h1 style="text-align:center">我来请客</h1>
+    <h1 style="text-align:center;color:white">AA聚餐</h1>
     <v-ons-card>
       <div class="center">
         <div v-for="(select, index) in selected" :key="'select'+index">
@@ -13,18 +17,21 @@
               {{ item.text }}
               </option>
           </v-ons-select>
-          <button class="del-btn" @click="delUser(index)">-</button>
+          <button class="del-btn" @click="delUser(index)">—</button>
         </div>
       </div>
       <div class="add-user" @click="addUser">
           加一位
       </div>
-      <button class="submit-btn">确定</button>
+      <button class="submit-btn" @click="submit">确定</button>
     </v-ons-card>
   </v-ons-content>
 </v-ons-page>
 </template>
 <style scoped>
+.page__background {
+  background-color: #3B7CF6 !important;
+}
 .add-user {
   height: 50px;
   margin: 10px 0;
@@ -55,6 +62,7 @@
   border-radius: 12px;
   font-size: 14px;
   outline: none;
+  text-align: center;
 }
 </style>
 
@@ -64,8 +72,6 @@ export default {
   data() {
     return {
       users: [],
-      formData: {},
-      selectedItem: '',
       selected: []
     };
   },
@@ -84,7 +90,14 @@ export default {
     delUser(index) {
       this.selected.splice(index, 1)
     },
-    submit() {}
+    submit() {
+      const postData = {users: this.selected} 
+      alert(JSON.stringify(postData))
+    },
+    goback() {
+      this.$router.push({name: 'home'})
+    }
+
   }
 };
 </script>

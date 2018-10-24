@@ -7,7 +7,7 @@
     <v-ons-card>
       <h1 style="text-align:center">RICH</h1>
       <p style="text-align:center">
-        <v-ons-button style="width: 80%"  @click="go('Treat')">
+        <v-ons-button style="width: 80%"  @click="go('treat')">
           我要请客
         </v-ons-button>
       </p>
@@ -15,7 +15,7 @@
     <v-ons-card>
       <h1 style="text-align:center">AA</h1>
       <p style="text-align:center">
-        <v-ons-button style="width: 80%" @click="go('Dutch')">
+        <v-ons-button style="width: 80%" @click="go('dutch')">
           AA聚餐
         </v-ons-button>
       </p>
