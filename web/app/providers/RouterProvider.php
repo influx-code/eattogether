@@ -94,7 +94,7 @@ class RouterProvider implements ServiceProviderInterface
 
             array(UserController::class, '/user/login',  'get', '/{mobile}', 'login'),
             array(UserController::class, '/user/geteatstatus',  'get', '/{mobile}', 'getEatStatus'),
-            array(UserController::class, '/user/getfriendslist',  'get', '/{token}', 'getFriendsList')
+            array(UserController::class, '/user/getfriendslist',  'get', '/{token}', 'getFriendsList'),
 
             array(DiningController::class, '/dining/apply',  'post', '', 'applyAction'),
             array(DiningController::class, '/dining/info',  'get', '{uid}', 'infoAction'),
