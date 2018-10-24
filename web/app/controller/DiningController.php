@@ -114,15 +114,17 @@ class DiningController extends BaseController
 				$newInvite->id = NULL;
 				$newInvite->user_id = $item;
 				$newInvite->save();
+				$userInfo = Users::findFirst($item);
 
 				// 推送队列
 				$task = [
-					'mail' => 'linsist@influx.io',
+					'mobile' => $userInfo->mobile,
+					// 'mail' => 'linsist@influx.io',
+					'template_code' => 'SMS_149100243',
 					'template_param' => [
-						'path' => '',
-						'name' => Users::findFirst($item)->username,
-						'mode' => $pay_mode,
-						'type' => $type
+						'address' => 'http://www.baidu.com',
+						'name' => $userInfo->username,
+						'mode' => $pay_mode . $type,
 					],
 				];
 				$this->redis->lpush(self::SMS_QUEUE, json_encode($task));
@@ -131,7 +133,7 @@ class DiningController extends BaseController
 		}
 		if ($flag) {
 			$newInvite->id = NULL;
-			$newInvite->user_id = $uid;
+			$newInvite->user_id = $data['uid'];
 			$newInvite->status = Constants::INVITE_STATUS_YES;
 			$newInvite->save();
 			$this->output($success);
