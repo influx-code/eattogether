@@ -4,11 +4,11 @@ namespace Controller;
 
 
 use Common\BaseController;
+use Common\Constants;
 use Model\Users;
 use Model\Invites;
 use Model\Dinings;
 use Model\DiningTables;
-
 
 /**
  * 约饭信息&操作
@@ -26,18 +26,104 @@ class DiningController extends BaseController
 	 */
 	public function applyAction()
 	{
+		$fail = ['result' => -1, 'msg' => '发起约饭失败'];
+		$success = ['result' => 0, 'msg' => '发起成功，请等待用户确认'];
 
+		$data = $this->reqeuest->getPost();
+		// 判断参数合法性
+		$require = ['uid', 'pay_mode', 'number_limit', 'targets'];
+		foreach ($require as $item) {
+			if (!array_key_exists($item, $data)) {
+				$fail['msg'] = '缺少参数';
+				$this->output($fail);
+			}
+			if ($item == 'targets' && count($data['targets'])) {
+				$fail['msg'] = '请至少选择一位邀请人';
+				$this->output($fail);
+			}
+		}
+		if ($data['pay_mode'] != Constants::PAY_MODE_AA && $data['pay_mode'] != Constants::PAY_MODE_TREAT) {
+			$fail['msg'] = '非法支付方式';
+			$this->output($fail);
+		}
+
+		$newTable = new DiningTables();
+		$newInvite = new Invites();
+
+		$diningData = [
+			'uid' => $data['uid'],
+			'pay_mode' => $data['pay_mode'],
+			'number_limit' => $data['number_limit'],
+			'number_ready' => 0,
+			'created' => time(),
+			'updated' => time()
+		];
+		$result = $newTable->save($diningData, array_keys($diningData));
+		if (!$result) {
+			$this->output($fail);
+		}
+		$diningTableId = $newTable->dining_table_id;
+		$flag = false;
+		$needRandom = 0;
+		$newInvite->
+		foreach ($data['targets'] as $item) {
+			if ($item) {
+				
+			} else {
+				$needRandom++;
+			}
+		}
+		if ($flag) {
+			$this->output($success);
+		} else {
+			$this->output($fail);
+		}
 	}
 
 	/**
-	 * 获取当前约饭详情
+	 * 获取当前用户约饭详情
 	 * @method GET
 	 * @param  string $uid
 	 * @return array
 	 */
 	public function infoAction($uid)
 	{
+		$fail = ['result' => -1, 'msg' => '未知错误'];
+		$success = ['result' => 0, 'msg' => 'ok', 'dining_table' => [], 'dining_table_id' => 0];
+		$statusList = [
+			Constants::INVITE_STATUS_WRITING,
+			Constants::INVITE_STATUS_YES,
+			Constants::INVITE_STATUS_SENDED,
+		];
+		$result = Invites::findFirst([
+			'conditions' => 'uid = :uid: AND status IN ({status:array})',
+			'bind' => ['uid' => $uid, 'status' => $status]
+		]);
 
+		if (!$result) {
+			$fail['msg'] = '目前没有被约饭';
+			$this->output($fail);
+		} else {
+			$tableInfo = Invites::find([
+				'conditions' => 'dining_table_id = :table_id:',
+				'bind' => ['table_id' => $result->dining_table_id]
+			]);
+			$diningTableInfo = []
+			if ($tableInfo->count()) {
+				foreach ($tableInfo as $item) {
+					$diningTableInfo[] = [
+						'uid' => $item->uid,
+						'name' => Users::findFirst($item->uid)->username,
+						'status' => $item->status,
+						'status_invite' => Constants::$statusMap[$item->status]
+					];
+				}
+			}
+			$success['dining_table'] = $diningTableInfo;
+			$success['dining_table_id'] = $result->dining_table_id;
+
+			$this->output($success);
+		}
 	}
 
 	/**
