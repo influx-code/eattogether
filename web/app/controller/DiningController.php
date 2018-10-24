@@ -86,7 +86,7 @@ class DiningController extends BaseController
 			$uids = array_column($userList, 'id');
 			$randomList = Invites::findFirst([
 				'conditions' => 'uid IN ({uids:array}) AND status IN ({status:array})',
-				'bind' => ['uids' => $uids,'status' => self::$statusList]
+				'bind' => ['uids' => $uids,'status' => self::$statusList],
 				'limit' => count($needRandom),
 			]);
 			$randomUids = [];
@@ -122,7 +122,7 @@ class DiningController extends BaseController
 						'name' => Users::findFirst($item)->username,
 						'mode' => $pay_mode,
 						'type' => $type
-					];
+					],
 				];
 				$this->redis->lpush(self::SMS_QUEUE, json_encode($task));
 			}
@@ -157,7 +157,7 @@ class DiningController extends BaseController
 				'conditions' => 'dining_table_id = :table_id:',
 				'bind' => ['table_id' => $result->dining_table_id]
 			]);
-			$diningTableInfo = []
+			$diningTableInfo = [];
 			if ($tableInfo->count()) {
 				foreach ($tableInfo as $item) {
 					$diningTableInfo[] = [
