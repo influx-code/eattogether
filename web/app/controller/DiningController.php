@@ -105,6 +105,9 @@ class DiningController extends BaseController
 		$newInvite->status = Constants::INVITE_STATUS_SENDED;
 		$newInvite->created = time();
 		$newInvite->updated = time();
+		$pay_mode = $data['pay_mode'] == self::PAY_MODE_AA ? 'AA吃饭' : '我要吃饭';
+		$currentHour = date('G');
+		$type = $currentHour > 14 ? '午饭' : '晚饭';
 		foreach ($inviteUids as $item) {
 			if (!$item) {
 				$newInvite->id = NULL;
@@ -112,9 +115,15 @@ class DiningController extends BaseController
 				$newInvite->save();
 
 				// 推送队列
-				// $task = [
-				// ];
-				// $this->redis->lpush(self::SMS_QUEUE, json_encode($task));
+				
+				$task = [
+					'title' => Users::findFirst($item)->username,
+					'mail' => 'linsist@influx.io',
+					'url' => '',
+					'pay_mode' => $pay_mode,
+					'type' => $type
+				];
+				$this->redis->lpush(self::SMS_QUEUE, json_encode($task));
 			}
 		}
 		if ($flag) {
