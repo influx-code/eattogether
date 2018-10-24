@@ -55,6 +55,7 @@ export default {
       axios.get(`/dining/info/${uid}`).then(res => {
         if (res.data) {
           console.log(res.data)
+          this.parking = true
         }
       }).catch(error => {
         console.log(error)
