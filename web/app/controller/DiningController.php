@@ -47,7 +47,7 @@ class DiningController extends BaseController
 				$fail['msg'] = '缺少参数';
 				$this->output($fail);
 			}
-			if ($item == 'targets' && count($data['targets'])) {
+			if ($item == 'targets' && !count($data['targets'])) {
 				$fail['msg'] = '请至少选择一位邀请人';
 				$this->output($fail);
 			}
@@ -72,7 +72,7 @@ class DiningController extends BaseController
 		if (!$result) {
 			$this->output($fail);
 		}
-		$diningTableId = $newTable->dining_table_id;
+		$diningTableId = $newTable->id;
 		$flag = false;
 
 		// 统计需要随机的个数
