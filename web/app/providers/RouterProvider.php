@@ -94,7 +94,7 @@ class RouterProvider implements ServiceProviderInterface
             array(TestController::class, '/test/test1',  'get', '', 'test1Action'),
 
             array(UserController::class, '/user/login',  'get', '/{mobile}', 'login'),
-            array(UserController::class, '/user/geteatstatus',  'get', '/{mobile}', 'getEatStatus'),
+            array(UserController::class, '/user/getfriendslist',  'get', '/{token}', 'getFriendsList')
         );
     }
 }
