@@ -21,12 +21,15 @@ class Invites extends DbModel
      * @return mixed
      */
     public function dealAction($uid, $diningTableId, $status){
-        $condition = 'user_id = :id: and dining_table_id = :dining_table_id: and status <> 2';
+        $condition = 'user_id = :user_id: and dining_table_id = :dining_table_id: and status <> 2';
         $query = [
             $condition,
             'bind' => ['user_id' => $uid,'dining_table_id' => $diningTableId],
         ];
         $invite = self::findFirst($query);
+        if(empty($invite)){
+            return FALSE;
+        }
         $ret = $invite->toArray();
         if(empty($ret)){
             return FALSE;
