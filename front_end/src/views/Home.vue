@@ -29,6 +29,7 @@
 </style>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'home',
   mounted() {
@@ -39,7 +40,11 @@ export default {
       this.$router.push({name: routerName})
     },
     getData() {
-
+      axios.get('user/getfriendslist/1').then(res => {
+        console.log(res)
+      }).catch(error => {
+        console.log(error)
+      })
     }
   }
 }
