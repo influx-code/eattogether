@@ -171,8 +171,19 @@ class DiningController extends BaseController
 	 * @param   string $diningTableId
 	 * @return  array
 	 */
-	public function dealAction($uid, $diningTableId)
+	public function dealAction($uid, $diningTableId, $status)
 	{
-
+        $invite_model = new Invites();
+        $result = $invite_model->dealAction($uid,$diningTableId,$status);
+        if($result){
+            $res = array(
+                'msg' => 'ok',
+            );
+        }else{
+            $res = array(
+                'msg' => '操作失败，请重试',
+            );
+        }
+        $this->output($res);
 	}
 }
