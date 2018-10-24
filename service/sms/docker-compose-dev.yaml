@@ -7,15 +7,10 @@ services:
       - ./:/data0/server/sms
     environment:
       - TZ=Asia/Shanghai
-      - APP_ENV=local
+      - APP_ENV=development
     command: 
       - /bin/sh
       - -c
       - |
         npm install --prefix /data0/server/sms
         npm start --prefix /data0/server/sms
-
-networks:
-  default:
-    external:
-      name: local

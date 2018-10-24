@@ -23,7 +23,7 @@ export default new Router({
     },
     {
       path: '/signin',
-      name: 'Signin',
+      name: 'signin',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -31,7 +31,7 @@ export default new Router({
     },
     {
       path: '/dutch',
-      name: 'Dutch',
+      name: 'dutch',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -39,7 +39,7 @@ export default new Router({
     },
     {
       path: '/treat',
-      name: 'Treat',
+      name: 'treat',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -47,7 +47,7 @@ export default new Router({
     },
     {
       path: '/schedule',
-      name: 'Schedule',
+      name: 'schedule',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
