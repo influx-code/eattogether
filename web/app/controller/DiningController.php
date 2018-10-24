@@ -40,7 +40,7 @@ class DiningController extends BaseController
 
 		$data = $this->request->getPost();
 		// 判断参数合法性
-		$require = ['uid', 'pay_mode', 'number_limit', 'targets'];
+		$require = ['uid', 'pay_mode', 'targets'];
 		foreach ($require as $item) {
 			if (!array_key_exists($item, $data)) {
 				$fail['msg'] = '缺少参数';
@@ -62,7 +62,7 @@ class DiningController extends BaseController
 		$diningData = [
 			'uid' => $data['uid'],
 			'pay_mode' => $data['pay_mode'],
-			'number_limit' => $data['number_limit'],
+			'number_limit' => count($data['targets']),
 			'number_ready' => 0,
 			'created' => time(),
 			'updated' => time()
@@ -105,7 +105,7 @@ class DiningController extends BaseController
 		$newInvite->status = Constants::INVITE_STATUS_SENDED;
 		$newInvite->created = time();
 		$newInvite->updated = time();
-		$pay_mode = $data['pay_mode'] == self::PAY_MODE_AA ? 'AA吃饭' : '我要吃饭';
+		$pay_mode = $data['pay_mode'] == Constants::PAY_MODE_AA ? 'AA吃饭' : '我要吃饭';
 		$currentHour = date('G');
 		$type = $currentHour > 14 ? '午饭' : '晚饭';
 		foreach ($inviteUids as $item) {
