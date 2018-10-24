@@ -67,6 +67,7 @@
 </style>
 
 <script>
+import axios from 'axios'
 export default {
   name: "dutch",
   data() {
@@ -80,19 +81,45 @@ export default {
   },
   methods: {
     getUserList() {
-      this.users = [{ text: "Mankong", value: "Mankong" }, { text: "Uique", value: "Uique" }];
+      const uid = window.localStorage.getItem('uid') || 1;
+      axios.get(`user/getfriendslist/${uid}`).then(res => {
+        const rowset = res.data.rowset
+        const options = [{ text: "随机", value: 0 }, ]
+        for (const item of rowset) {
+          options.push({
+            text: item.name, value: item.uid
+          })
+        }
+        this.users = options
+      }).catch(error => {
+        $ons.notification.alert('请求错误')
+      })
     },
     addUser() {
       this.selected.push(
-        {text: "Mankong", value: "Mankong"}
+        {text: "随机", value: "0"}
       )
     },
     delUser(index) {
       this.selected.splice(index, 1)
     },
     submit() {
-      const postData = {users: this.selected} 
+      const uid = window.localStorage.getItem('uid') || 1;
+      const uids = []
+      for (const item of this.selected) {
+        uids.push(item.value)
+      }
+      if (uids.length == 0) {
+        this.$ons.notification.alert('请选择对象')
+        return false
+      }
+      const postData = {pay_mode: 1, uid:uid,targets: uids } 
       alert(JSON.stringify(postData))
+      axios.post('', postData).then(res => {
+
+      }).catch(error => {
+        
+      })
     },
     goback() {
       this.$router.push({name: 'home'})
