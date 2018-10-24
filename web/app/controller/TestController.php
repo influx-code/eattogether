@@ -4,7 +4,7 @@ namespace Controller;
 
 use Common\BaseController;
 
-class ApiController extends BaseController
+class TestController extends BaseController
 {
     public function test1Action()
     {

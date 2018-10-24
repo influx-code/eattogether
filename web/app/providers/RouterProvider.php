@@ -8,6 +8,8 @@
 namespace Providers;
 
 use Controller\ApiController;
+use Controller\TestController;
+use Controller\UserController;
 use Phalcon\Di\ServiceProviderInterface;
 use Phalcon\DiInterface;
 use Phalcon\Events\Manager;
@@ -90,6 +92,9 @@ class RouterProvider implements ServiceProviderInterface
         return array(
             array(ApiController::class,  '/api/gateway',  'post', '', 'gatewayAction'),
             array(TestController::class, '/test/test1',  'get', '', 'test1Action'),
+
+            array(UserController::class, '/user/login',  'get', '/{mobile}', 'login'),
+            array(UserController::class, '/user/geteatstatus',  'get', '/{mobile}', 'getEatStatus'),
         );
     }
 }
