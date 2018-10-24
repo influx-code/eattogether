@@ -8,6 +8,7 @@
 namespace Providers;
 
 use Controller\ApiController;
+use Controller\ExecuteController;
 use Controller\TestController;
 use Controller\UserController;
 use Phalcon\Di\ServiceProviderInterface;
@@ -94,11 +95,13 @@ class RouterProvider implements ServiceProviderInterface
 
             array(UserController::class, '/user/login',  'get', '/{mobile}', 'login'),
             array(UserController::class, '/user/geteatstatus',  'get', '/{mobile}', 'getEatStatus'),
-            array(UserController::class, '/user/getfriendslist',  'get', '/{token}', 'getFriendsList')
+            array(UserController::class, '/user/getfriendslist',  'get', '/{token}', 'getFriendsList'),
 
             array(DiningController::class, '/dining/apply',  'post', '', 'applyAction'),
             array(DiningController::class, '/dining/info',  'get', '{uid}', 'infoAction'),
-            array(DiningController::class, '/dining/deal',  'get', '{uid}/{dining_table_id}', 'dealAction'),
+            array(DiningController::class, '/dining/deal',  'get', '{uid}/{dining_table_id}/{status}', 'dealAction'),
+
+            array(ExecuteController::class, '/execute/checkinvite',  'get', '', 'checkInviteExpire')
 
         );
     }
