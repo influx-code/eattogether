@@ -122,7 +122,7 @@ class DiningController extends BaseController
 					// 'mail' => 'linsist@influx.io',
 					'template_code' => 'SMS_149100243',
 					'template_param' => [
-						'address' => 'http://www.baidu.com',
+						'address' => '[一起吃饭吧]',
 						'name' => $userInfo->username,
 						'mode' => $pay_mode . $type,
 					],
