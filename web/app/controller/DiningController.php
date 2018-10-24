@@ -40,7 +40,7 @@ class DiningController extends BaseController
 
 		$data = $this->request->getPost();
 		// 判断参数合法性
-		$data['targets'] = is_string($data['targets']) ? json_encode($data['targets']) : $data['targets'];
+		$data['targets'] = is_string($data['targets']) ? json_decode($data['targets'], true) : $data['targets'];
 		$require = ['uid', 'pay_mode', 'targets'];
 		foreach ($require as $item) {
 			if (!array_key_exists($item, $data)) {
