@@ -130,6 +130,10 @@ class DiningController extends BaseController
 			}
 		}
 		if ($flag) {
+			$newInvite->id = NULL;
+			$newInvite->user_id = $uid;
+			$newInvite->status = Constants::INVITE_STATUS_YES;
+			$newInvite->save();
 			$this->output($success);
 		} else {
 			$this->output($fail);
