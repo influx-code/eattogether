@@ -38,7 +38,7 @@ class DiningController extends BaseController
 		$fail = ['result' => -1, 'msg' => '发起约饭失败'];
 		$success = ['result' => 0, 'msg' => '发起成功，请等待用户确认'];
 
-		$data = $this->reqeuest->getPost();
+		$data = $this->request->getPost();
 		// 判断参数合法性
 		$require = ['uid', 'pay_mode', 'number_limit', 'targets'];
 		foreach ($require as $item) {
