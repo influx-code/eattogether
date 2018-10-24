@@ -40,13 +40,14 @@ class DiningController extends BaseController
 
 		$data = $this->request->getPost();
 		// 判断参数合法性
-		$require = ['uid', 'pay_mode', 'number_limit', 'targets'];
+		$data['targets'] = is_string($data['targets']) ? json_decode($data['targets'], true) : $data['targets'];
+		$require = ['uid', 'pay_mode', 'targets'];
 		foreach ($require as $item) {
 			if (!array_key_exists($item, $data)) {
 				$fail['msg'] = '缺少参数';
 				$this->output($fail);
 			}
-			if ($item == 'targets' && count($data['targets'])) {
+			if ($item == 'targets' && !count($data['targets'])) {
 				$fail['msg'] = '请至少选择一位邀请人';
 				$this->output($fail);
 			}
@@ -62,7 +63,7 @@ class DiningController extends BaseController
 		$diningData = [
 			'user_id' => $data['uid'],
 			'pay_mode' => $data['pay_mode'],
-			'number_limit' => $data['number_limit'],
+			'number_limit' => count($data['targets']),
 			'number_ready' => 0,
 			'created' => time(),
 			'updated' => time()
@@ -71,7 +72,7 @@ class DiningController extends BaseController
 		if (!$result) {
 			$this->output($fail);
 		}
-		$diningTableId = $newTable->dining_table_id;
+		$diningTableId = $newTable->id;
 		$flag = false;
 
 		// 统计需要随机的个数
@@ -105,29 +106,36 @@ class DiningController extends BaseController
 		$newInvite->status = Constants::INVITE_STATUS_SENDED;
 		$newInvite->created = time();
 		$newInvite->updated = time();
-		$pay_mode = $data['pay_mode'] == self::PAY_MODE_AA ? 'AA吃饭' : '我要请吃饭';
+		$pay_mode = $data['pay_mode'] == Constants::PAY_MODE_AA ? 'AA吃饭' : '我要吃饭';
 		$currentHour = date('G');
 		$type = $currentHour > 14 ? '午饭' : '晚饭';
 		foreach ($inviteUids as $item) {
-			if (!$item) {
+			if ($item) {
 				$newInvite->id = NULL;
 				$newInvite->user_id = $item;
 				$newInvite->save();
+				$userInfo = Users::findFirst($item);
 
 				// 推送队列
 				$task = [
-					'mail' => 'linsist@influx.io',
+					'mobile' => $userInfo->mobile,
+					// 'mail' => 'linsist@influx.io',
+					'template_code' => 'SMS_149100243',
 					'template_param' => [
-						'path' => '',
-						'name' => Users::findFirst($item)->username,
-						'mode' => $pay_mode,
-						'type' => $type
+						'address' => 'http://www.baidu.com',
+						'name' => $userInfo->username,
+						'mode' => $pay_mode . $type,
 					],
 				];
 				$this->redis->lpush(self::SMS_QUEUE, json_encode($task));
+				$flag = true;
 			}
 		}
 		if ($flag) {
+			$newInvite->id = NULL;
+			$newInvite->user_id = $data['uid'];
+			$newInvite->status = Constants::INVITE_STATUS_YES;
+			$newInvite->save();
 			$this->output($success);
 		} else {
 			$this->output($fail);

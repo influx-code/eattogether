@@ -13,7 +13,7 @@ class BaseController extends Controller
         } else {
             echo json_encode($data);
         }
-
+        exit;
         return null;
     }
 
