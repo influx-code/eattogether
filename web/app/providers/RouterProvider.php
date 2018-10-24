@@ -98,7 +98,7 @@ class RouterProvider implements ServiceProviderInterface
 
             array(DiningController::class, '/dining/apply',  'post', '', 'applyAction'),
             array(DiningController::class, '/dining/info',  'get', '{uid}', 'infoAction'),
-            array(DiningController::class, '/dining/deal',  'get', '{uid}/{dining_table_id}', 'dealAction'),
+            array(DiningController::class, '/dining/deal',  'get', '{uid}/{dining_table_id}{status}', 'dealAction'),
 
         );
     }
