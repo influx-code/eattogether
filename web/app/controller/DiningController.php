@@ -15,6 +15,15 @@ use Model\DiningTables;
  */
 class DiningController extends BaseController
 {
+
+	const SMS_QUEUE = 'SMS_QUEUE';
+
+	private static $statusList = [
+		Constants::INVITE_STATUS_WRITING,
+		Constants::INVITE_STATUS_YES,
+		Constants::INVITE_STATUS_SENDED,
+	];
+
 	/**
 	 * 提交约饭申请
 	 * @method POST
@@ -64,13 +73,58 @@ class DiningController extends BaseController
 		}
 		$diningTableId = $newTable->dining_table_id;
 		$flag = false;
-		$needRandom = 0;
-		$newInvite->
-		foreach ($data['targets'] as $item) {
-			if ($item) {
-				
-			} else {
-				$needRandom++;
+
+		// 统计需要随机的个数
+		$inviteUids = $data['targets'];
+		$needRandom = array_count_values($data['targets']);
+		$needRandom = $needRandom[0];
+		if ($needRandom) {
+			$userList = Users::find([
+				'conditions' => 'id NOT IN ({exists:array})',
+				'bind' => ['exists' => $data['targets']]
+			])->toArray();
+			$uids = array_column($userList, 'id');
+			$randomList = Invites::findFirst([
+				'conditions' => 'uid IN ({uids:array}) AND status IN ({status:array})',
+				'bind' => ['uids' => $uids,'status' => self::$statusList]
+				'limit' => count($needRandom),
+			]);
+			$randomUids = [];
+			if ($randomList->count()) {
+				$randomList = $randomList->toArray();
+				$randomUids = array_column($randomList, 'uid');
+			}
+
+			// 合并需要邀请的uid
+			$inviteUids = array_merge($inviteUids, $randomUids);
+		}
+
+		// 初始化插入数据
+		$newInvite->dining_table_id = $diningTableId;
+		$newInvite->type = 0;
+		$newInvite->status = Constants::INVITE_STATUS_SENDED;
+		$newInvite->created = time();
+		$newInvite->updated = time();
+		$pay_mode = $data['pay_mode'] == self::PAY_MODE_AA ? 'AA吃饭' : '我要吃饭';
+		$currentHour = date('G');
+		$type = $currentHour > 14 ? '午饭' : '晚饭';
+		foreach ($inviteUids as $item) {
+			if (!$item) {
+				$newInvite->id = NULL;
+				$newInvite->uid = $item;
+				$newInvite->save();
+
+				// 推送队列
+				$task = [
+					'mail' => 'linsist@influx.io',
+					'template_param' => [
+						'path' => '',
+						'name' => Users::findFirst($item)->username,
+						'mode' => $pay_mode,
+						'type' => $type
+					];
+				];
+				$this->redis->lpush(self::SMS_QUEUE, json_encode($task));
 			}
 		}
 		if ($flag) {
@@ -90,14 +144,9 @@ class DiningController extends BaseController
 	{
 		$fail = ['result' => -1, 'msg' => '未知错误'];
 		$success = ['result' => 0, 'msg' => 'ok', 'dining_table' => [], 'dining_table_id' => 0];
-		$statusList = [
-			Constants::INVITE_STATUS_WRITING,
-			Constants::INVITE_STATUS_YES,
-			Constants::INVITE_STATUS_SENDED,
-		];
 		$result = Invites::findFirst([
 			'conditions' => 'uid = :uid: AND status IN ({status:array})',
-			'bind' => ['uid' => $uid, 'status' => $status]
+			'bind' => ['uid' => $uid, 'status' => self::$statusList]
 		]);
 
 		if (!$result) {
@@ -132,8 +181,19 @@ class DiningController extends BaseController
 	 * @param   string $diningTableId
 	 * @return  array
 	 */
-	public function dealAction($uid, $diningTableId)
+	public function dealAction($uid, $diningTableId, $status)
 	{
-
+        $invite_model = new Invites();
+        $result = $invite_model->dealAction($uid,$diningTableId,$status);
+        if($result){
+            $res = array(
+                'msg' => 'ok',
+            );
+        }else{
+            $res = array(
+                'msg' => '操作失败，请重试',
+            );
+        }
+        $this->output($res);
 	}
 }
