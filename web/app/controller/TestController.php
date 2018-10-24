@@ -8,6 +8,7 @@ class TestController extends BaseController
 {
     public function test1Action()
     {
-        echo 'ok';
+        $data = array('name'=>'stave');
+        $this->output($data);
     }
 }
