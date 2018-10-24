@@ -11,7 +11,6 @@ return [
         'namespaces' => [
             'Controller' => APP_PATH .'/controller/',
             'Library' => LIBRARY_PATH,
-            'Business' => APP_PATH . '/business/',
             'Model' => APP_PATH . '/model/',
             'Common' => APP_PATH . '/common/',
             'Providers' => APP_PATH . '/providers/',
