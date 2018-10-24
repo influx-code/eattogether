@@ -14,8 +14,7 @@ class ExecuteController extends BaseController
 {
     public function checkInviteExpire(){
         $hour = intval(date('H'));
-        var_dump($hour);
-        if($hour > 20){
+        if($hour > 22){
             $limit_time = time();
         }elseif($hour > 14 ){
             $limit_time = strtotime(date('Y-m-d').' 14:00:00');
@@ -25,5 +24,6 @@ class ExecuteController extends BaseController
 
         $invite_model = new Invites();
         $invite_model->checkExpire($limit_time);
+        echo '执行成功';
     }
 }

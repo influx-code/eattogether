@@ -105,7 +105,7 @@ class DiningController extends BaseController
 		$newInvite->status = Constants::INVITE_STATUS_SENDED;
 		$newInvite->created = time();
 		$newInvite->updated = time();
-		$pay_mode = $data['pay_mode'] == self::PAY_MODE_AA ? 'AA吃饭' : '我要吃饭';
+		$pay_mode = $data['pay_mode'] == self::PAY_MODE_AA ? 'AA吃饭' : '我要请吃饭';
 		$currentHour = date('G');
 		$type = $currentHour > 14 ? '午饭' : '晚饭';
 		foreach ($inviteUids as $item) {
