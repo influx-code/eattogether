@@ -101,7 +101,7 @@ async function sendSms(job) {
 	let options = {
 		'PhoneNumbers': mobile,
 		'TemplateCode': template_code,
-		'TemplateParam': template_param,
+		'TemplateParam': JSON.stringify(template_param),
 	}
 
 	utils.log('发送短信', options)
