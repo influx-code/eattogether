@@ -115,13 +115,14 @@ class DiningController extends BaseController
 				$newInvite->save();
 
 				// 推送队列
-				
 				$task = [
-					'title' => Users::findFirst($item)->username,
 					'mail' => 'linsist@influx.io',
-					'url' => '',
-					'pay_mode' => $pay_mode,
-					'type' => $type
+					'template_param' => [
+						'path' => '',
+						'name' => Users::findFirst($item)->username,
+						'mode' => $pay_mode,
+						'type' => $type
+					];
 				];
 				$this->redis->lpush(self::SMS_QUEUE, json_encode($task));
 			}
