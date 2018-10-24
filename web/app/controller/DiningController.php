@@ -110,7 +110,7 @@ class DiningController extends BaseController
 		$currentHour = date('G');
 		$type = $currentHour > 14 ? '午饭' : '晚饭';
 		foreach ($inviteUids as $item) {
-			if (!$item) {
+			if ($item) {
 				$newInvite->id = NULL;
 				$newInvite->user_id = $item;
 				$newInvite->save();
@@ -126,6 +126,7 @@ class DiningController extends BaseController
 					],
 				];
 				$this->redis->lpush(self::SMS_QUEUE, json_encode($task));
+				$flag = true;
 			}
 		}
 		if ($flag) {
