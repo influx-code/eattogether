@@ -25,8 +25,15 @@ export default {
       mobile: ""
     };
   },
-  mounted() {},
+  mounted() {
+      this.checkLogin();
+  },
   methods: {
+    checkLogin() {
+        if (window.localStorage.getItem('uid')) {
+            this.$router.push({name: 'home'})
+        }
+    },
     login() {
         const mobile = this.mobile
         if (!mobile) {

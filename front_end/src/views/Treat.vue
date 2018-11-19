@@ -5,9 +5,10 @@
       <v-ons-toolbar-button @click="goback()">back</v-ons-toolbar-button>
     </div>
     <div class="center">eattogether</div>
+    
   </v-ons-toolbar>
   <v-ons-content>
-    <h1 style="text-align:center">我来请客</h1>
+    <h1 style="text-align:center;color:white">我要请客</h1>
     <v-ons-card>
       <div class="center">
         <div v-for="(select, index) in selected" :key="'select'+index">
@@ -28,6 +29,9 @@
 </v-ons-page>
 </template>
 <style scoped>
+.page__background {
+  background-color: #3B7CF6 !important;
+}
 .add-user {
   height: 50px;
   margin: 10px 0;
@@ -63,8 +67,10 @@
 </style>
 
 <script>
+import axios from 'axios'
+import qs from 'qs'
 export default {
-  name: "treat",
+  name: "dutch",
   data() {
     return {
       users: [],
@@ -76,23 +82,53 @@ export default {
   },
   methods: {
     getUserList() {
-      this.users = [{ text: "Mankong", value: "Mankong" }, { text: "Uique", value: "Uique" }];
+      const uid = window.localStorage.getItem('uid') || 1;
+      axios.get(`user/getfriendslist/${uid}`).then(res => {
+        const rowset = res.data.rowset
+        const options = [{ text: "随机", value: 0 }, ]
+        for (const item of rowset) {
+          options.push({
+            text: item.name, value: item.uid
+          })
+        }
+        this.users = options
+      }).catch(error => {
+        this.$ons.notification.alert('请求错误')
+      })
     },
     addUser() {
       this.selected.push(
-        {text: "Mankong", value: "Mankong"}
+        {text: "随机", value: "0"}
       )
     },
     delUser(index) {
       this.selected.splice(index, 1)
     },
     submit() {
-      const postData = {users: this.selected} 
-      alert(JSON.stringify(postData))
+      const uid = window.localStorage.getItem('uid') || 1;
+      const uids = []
+      for (const item of this.selected) {
+        uids.push(item.value)
+      }
+      if (uids.length == 0) {
+        this.$ons.notification.alert('请选择对象')
+        return false
+      }
+      const postData = {pay_mode: 0, uid:uid,targets: uids } 
+      // alert(JSON.stringify(postData))
+      axios.post('dining/apply', qs.stringify(postData)).then(res => {
+      this.$ons.notification.toast(res.data.msg, { timeout: 1000, animation: 'fall' })
+      if (res.data.result == 0) {
+        this.$router.push({name: 'home'})
+      }
+      }).catch(error => {
+
+      })
     },
     goback() {
       this.$router.push({name: 'home'})
     }
+
   }
 };
 </script>

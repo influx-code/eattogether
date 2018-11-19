@@ -20,10 +20,10 @@
         </v-ons-button>
       </p>
     </v-ons-card>
-    <v-ons-card v-if="parking">
+    <v-ons-card v-show="parking">
       <h1 style="text-align:center">Ing</h1>
       <p style="text-align:center">
-        <v-ons-button style="width: 80%" @click="go('dutch')">
+        <v-ons-button style="width: 80%" @click="go('schedule')">
           约饭中
         </v-ons-button>
       </p>
@@ -40,8 +40,10 @@
 import axios from 'axios'
 export default {
   name: 'home',
-  data: {
-    parking: false
+  data() {
+    return {
+      parking: false
+    }
   },
   mounted() {
     this.getData()
@@ -55,7 +57,9 @@ export default {
       axios.get(`/dining/info/${uid}`).then(res => {
         if (res.data) {
           console.log(res.data)
-          this.parking = true
+          if (res.data.result != -1) {
+             this.parking = true
+          }
         }
       }).catch(error => {
         console.log(error)

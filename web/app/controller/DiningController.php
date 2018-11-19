@@ -106,7 +106,7 @@ class DiningController extends BaseController
 		$newInvite->status = Constants::INVITE_STATUS_SENDED;
 		$newInvite->created = time();
 		$newInvite->updated = time();
-		$pay_mode = $data['pay_mode'] == Constants::PAY_MODE_AA ? 'AA吃饭' : '我要吃饭';
+		$pay_mode = $data['pay_mode'] == Constants::PAY_MODE_AA ? 'AA吃饭' : '我要请客';
 		$currentHour = date('G');
 		$type = $currentHour > 14 ? '午饭' : '晚饭';
 		foreach ($inviteUids as $item) {
@@ -117,14 +117,23 @@ class DiningController extends BaseController
 				$userInfo = Users::findFirst($item);
 
 				// 推送队列
+				// $task = [
+				// 	'mobile' => $userInfo->mobile,
+				// 	// 'mail' => 'linsist@influx.io',
+				// 	'template_code' => 'SMS_149100243',
+				// 	'template_param' => [
+				// 		'address' => '[一起吃饭吧]',
+				// 		'name' => $userInfo->username,
+				// 		'mode' => $pay_mode . $type,
+				// 	],
+				// ];
 				$task = [
-					'mobile' => $userInfo->mobile,
-					// 'mail' => 'linsist@influx.io',
-					'template_code' => 'SMS_149100243',
+					'mail' => $userInfo->email,
 					'template_param' => [
-						'address' => '[一起吃饭吧]',
 						'name' => $userInfo->username,
-						'mode' => $pay_mode . $type,
+						'path' => 'http://172.16.3.139:8080/schedule',
+						'mode' => $pay_mode,
+						'type' => $type,
 					],
 				];
 				$this->redis->lpush(self::SMS_QUEUE, json_encode($task));

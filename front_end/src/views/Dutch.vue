@@ -93,7 +93,7 @@ export default {
         }
         this.users = options
       }).catch(error => {
-        $ons.notification.alert('请求错误')
+        this.$ons.notification.alert('请求错误')
       })
     },
     addUser() {
@@ -115,9 +115,12 @@ export default {
         return false
       }
       const postData = {pay_mode: 1, uid:uid,targets: uids } 
-      alert(JSON.stringify(postData))
+      // alert(JSON.stringify(postData))
       axios.post('dining/apply', qs.stringify(postData)).then(res => {
-       
+      this.$ons.notification.toast(res.data.msg, { timeout: 1000, animation: 'fall' })
+      if (res.data.result == 0) {
+        this.$router.push({name: 'home'})
+      }
       }).catch(error => {
 
       })
